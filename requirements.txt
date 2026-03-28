@@ -1,5 +1,5 @@
 Django==4.2.13
-Pillow==10.1.0
+Pillow==11.0.0
 opencv-python==4.8.1.78
 ultralytics==8.1.8
 reportlab==4.0.9

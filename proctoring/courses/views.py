@@ -617,8 +617,22 @@ def health(request):
 # 🎥 Face Detection / Attention
 # =============================
 
-# Initialize a basic face detector (Haar cascade)
-_FACE_DETECTOR = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+# Initialize face detector lazily (will be loaded when first needed)
+_FACE_DETECTOR = None
+
+def _get_face_detector():
+    """Lazy-load face detector on first use."""
+    global _FACE_DETECTOR
+    if _FACE_DETECTOR is None:
+        if not CV2_AVAILABLE:
+            print("Warning: OpenCV not available - face detection disabled")
+            return None
+        try:
+            _FACE_DETECTOR = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+        except Exception as e:
+            print(f"Warning: Failed to load face detector: {e}")
+            _FACE_DETECTOR = None
+    return _FACE_DETECTOR
 
 def _decode_image_b64(image_b64: str):
     """Decode a base64 image (optionally data URI) into a BGR numpy array."""
@@ -677,7 +691,19 @@ def _analyze_frame(img_bgr):
     """Return simple attention metrics from a single frame using heuristics."""
     h, w = img_bgr.shape[:2]
     gray = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2GRAY)
-    faces = _FACE_DETECTOR.detectMultiScale(gray, scaleFactor=1.2, minNeighbors=5, minSize=(60, 60))
+    
+    detector = _get_face_detector()
+    if detector is None:
+        # Face detection unavailable - return default metrics
+        return {
+            "face_present": False,
+            "center_offset": 0.5,
+            "faces_count": 0,
+            "attention_score": 0.5,
+            "distraction_likelihood": 0.0
+        }
+    
+    faces = detector.detectMultiScale(gray, scaleFactor=1.2, minNeighbors=5, minSize=(60, 60))
 
     face_present = len(faces) > 0
     center_offset = 1.0

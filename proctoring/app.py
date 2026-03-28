@@ -633,8 +633,22 @@ Return ONLY valid JSON (no markdown):
                 }]
 
 
-# Lightweight face detector for attention tracking
-_FACE_DETECTOR = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+# Lightweight face detector for attention tracking (lazy-loaded)
+_FACE_DETECTOR = None
+
+def _get_face_detector_app():
+    """Lazy-load face detector on first use."""
+    global _FACE_DETECTOR
+    if _FACE_DETECTOR is None:
+        if cv2 is None:
+            print("Warning: OpenCV not available - face detection disabled")
+            return None
+        try:
+            _FACE_DETECTOR = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+        except Exception as e:
+            print(f"Warning: Failed to load face detector: {e}")
+            _FACE_DETECTOR = None
+    return _FACE_DETECTOR
 
 
 def decode_image_b64(image_b64):

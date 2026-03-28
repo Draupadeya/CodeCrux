@@ -26,8 +26,16 @@ from django.views.decorators.csrf import csrf_protect
 
 # NOTE: Ensure your models are imported correctly from your app's models.py
 from .models import Candidate, Session, Event, StudentProfile, Faq
-from . import analyzer # Assuming 'analyzer' contains analyze_audio/analyze_frame logic
 from .models import PromoOffer, PurchasedOffer
+
+# Optional analyzer import - may fail if opencv/numpy not available
+try:
+    from . import analyzer
+    ANALYZER_AVAILABLE = True
+except ImportError as e:
+    print(f"Warning: analyzer module not available: {e}")
+    ANALYZER_AVAILABLE = False
+    analyzer = None
 
 # Get the custom or default User model
 User = get_user_model() 

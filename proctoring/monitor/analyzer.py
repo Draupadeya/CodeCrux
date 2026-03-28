@@ -1,15 +1,43 @@
-import cv2
-import numpy as np
 import json
+import numpy as np
+
+# Optional computer vision imports - loaded on demand
+cv2 = None
+YOLO = None
+yolo_model = None
+YOLO_AVAILABLE = False
+CV2_AVAILABLE = False
+
+def _load_cv2():
+    global cv2, CV2_AVAILABLE
+    if cv2 is None and not CV2_AVAILABLE:
+        try:
+            import cv2 as cv2_module
+            cv2 = cv2_module
+            CV2_AVAILABLE = True
+            return True
+        except ImportError as e:
+            print(f"Warning: OpenCV not available: {e}")
+            CV2_AVAILABLE = False
+            return False
+    return cv2 is not None
+
+def _load_yolo():
+    global YOLO, yolo_model, YOLO_AVAILABLE
+    if not YOLO_AVAILABLE:
+        try:
+            from ultralytics import YOLO as YOLOClass
+            YOLO = YOLOClass
+            yolo_model = YOLO("yolov8n.pt")
+            YOLO_AVAILABLE = True
+            return True
+        except Exception as e:
+            print(f"Warning: YOLO not available: {e}")
+            YOLO_AVAILABLE = False
+            return False
+    return yolo_model is not None
 
 # Optional ML/Audio imports
-try:
-    from ultralytics import YOLO
-    YOLO_AVAILABLE = True
-except ImportError:
-    YOLO_AVAILABLE = False
-    YOLO = None
-
 try:
     import speech_recognition as sr
     SR_AVAILABLE = True
@@ -27,15 +55,6 @@ except ImportError:
 from .models import Event
 
 SIM_THRESHOLD = 0.6  # face similarity threshold
-
-# Load YOLOv8 model (pretrained on COCO) - only if available
-yolo_model = None
-if YOLO_AVAILABLE:
-    try:
-        yolo_model = YOLO("yolov8n.pt")  # small, fast version
-    except Exception as e:
-        print(f"Warning: Could not load YOLO model: {e}")
-        YOLO_AVAILABLE = False
 
 # Expanded gadget synonyms for detection
 GADGET_SYNONYMS = [
@@ -55,6 +74,9 @@ def cosine_similarity(a, b):
 # Load DeepFace embedding
 # ------------------------------
 def get_embedding_from_frame(face_img):
+    if not _load_cv2():
+        raise ImportError("OpenCV (cv2) not available for face embedding")
+    
     from deepface import DeepFace
     try:
         face_resized = cv2.resize(face_img, (160, 160))

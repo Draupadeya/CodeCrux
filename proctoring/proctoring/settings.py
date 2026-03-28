@@ -112,12 +112,26 @@ TEMPLATES = [
 WSGI_APPLICATION = 'proctoring.wsgi.application'
 
 # Database
-DATABASES = {
-    'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL', 'sqlite:///' + str(BASE_DIR / 'db.sqlite3')),
-        conn_max_age=600
-    )
-}
+# Use SQLite by default (works on all platforms). 
+# Only use PostgreSQL if DATABASE_URL environment variable is explicitly set.
+_db_url = os.environ.get('DATABASE_URL')
+
+if _db_url and _db_url.startswith('postgresql://'):
+    # Production PostgreSQL (requires psycopg)
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=_db_url,
+            conn_max_age=600
+        )
+    }
+else:
+    # Development/Render with SQLite (no external dependencies)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [

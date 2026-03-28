@@ -27,7 +27,7 @@ def _csv(value: str):
 
 
 # Local defaults keep admin login happy; override with comma-separated env vars in deployments.
-ALLOWED_HOSTS = _csv(os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1,[::1],semianimated-makai-ladyishly.ngrok-free.dev,.ngrok-free.dev"))
+ALLOWED_HOSTS = _csv(os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1,[::1],semianimated-makai-ladyishly.ngrok-free.dev,.ngrok-free.dev,codecrux-lo2s.onrender.com,.onrender.com"))
 CSRF_TRUSTED_ORIGINS = _csv(os.getenv(
     "CSRF_TRUSTED_ORIGINS",
     "http://localhost:8000,http://127.0.0.1:8000,https://semianimated-makai-ladyishly.ngrok-free.dev",

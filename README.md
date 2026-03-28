@@ -40,7 +40,6 @@
 - **Progress Tracking** — Monitor student advancement
 
 ### 🎓 Additional Features
-- **Certificate Generation** — Automated certificate creation
 - **Payment/Coins System** — In-app purchase system for course access
 - **FAQ Management** — Knowledge base for students
 - **Session Management** — Track exam sessions and timestamps

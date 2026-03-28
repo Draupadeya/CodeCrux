@@ -1,8 +1,15 @@
 import io, base64, uuid
-import numpy as np
 import json
 import datetime
 from PIL import Image
+
+# Optional numpy import - will be lazy-loaded when needed
+try:
+    import numpy as np
+    NUMPY_AVAILABLE = True
+except ImportError:
+    NUMPY_AVAILABLE = False
+    np = None
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
@@ -664,6 +671,9 @@ def upload_audio(request):
 # ==========================
 @csrf_exempt
 def upload_frame(request):
+    if not NUMPY_AVAILABLE:
+        return JsonResponse({"error": "Numpy not available - image processing feature disabled. Please install opencv-python to enable this feature."}, status=503)
+    
     if request.method != "POST":
         return JsonResponse({"error": "POST method required"}, status=400)
 
@@ -772,6 +782,9 @@ def upload_frame(request):
 @login_required
 @csrf_exempt
 def verify_face(request):
+    if not NUMPY_AVAILABLE:
+        return JsonResponse({"error": "Numpy not available - face verification feature disabled. Please install opencv-python to enable this feature."}, status=503)
+    
     if request.method != "POST":
         return JsonResponse({"error": "POST required"}, status=400)
 

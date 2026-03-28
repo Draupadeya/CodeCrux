@@ -1,7 +1,13 @@
 import json
-import numpy as np
 
-# Optional computer vision imports - loaded on demand
+# Optional numpy and computer vision imports - loaded on demand
+try:
+    import numpy as np
+    NUMPY_AVAILABLE = True
+except ImportError:
+    NUMPY_AVAILABLE = False
+    np = None
+
 cv2 = None
 YOLO = None
 yolo_model = None

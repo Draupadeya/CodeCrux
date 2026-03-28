@@ -14,8 +14,21 @@ from youtube_transcript_api import YouTubeTranscriptApi
 import requests
 from dotenv import load_dotenv
 import base64
-import numpy as np
-import cv2
+
+# Optional numpy and cv2 imports - will be loaded on demand
+try:
+    import numpy as np
+    NUMPY_AVAILABLE = True
+except ImportError:
+    NUMPY_AVAILABLE = False
+    np = None
+
+try:
+    import cv2
+    CV2_AVAILABLE = True
+except ImportError:
+    CV2_AVAILABLE = False
+    cv2 = None
 from io import BytesIO
 try:
     from docx import Document

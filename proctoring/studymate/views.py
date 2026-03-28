@@ -15,9 +15,22 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 
 from youtube_transcript_api import YouTubeTranscriptApi
-import cv2
-import numpy as np
 import requests
+
+# Optional cv2 and numpy imports - will be loaded on demand
+try:
+    import cv2
+    CV2_AVAILABLE = True
+except ImportError:
+    CV2_AVAILABLE = False
+    cv2 = None
+
+try:
+    import numpy as np
+    NUMPY_AVAILABLE = True
+except ImportError:
+    NUMPY_AVAILABLE = False
+    np = None
 
 try:
     from docx import Document

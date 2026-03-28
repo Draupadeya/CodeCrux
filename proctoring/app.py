@@ -10,9 +10,22 @@ from pathlib import Path
 from youtube_transcript_api import YouTubeTranscriptApi
 import requests
 from dotenv import load_dotenv
-import cv2
-import numpy as np
-from deepface import DeepFace
+
+# Optional imports - this is legacy Flask code not used in Django deployment
+try:
+    import cv2
+except ImportError:
+    cv2 = None
+
+try:
+    import numpy as np
+except ImportError:
+    np = None
+
+try:
+    from deepface import DeepFace
+except ImportError:
+    DeepFace = None
 import base64
 from io import BytesIO
 from PIL import Image

@@ -19,8 +19,9 @@ except Exception:
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
-SECRET_KEY = 'django-insecure-(!(_z2g%!gawd_#j+*026$4ff9d345r-su+mv%6&c-8(x#eo9@'
-DEBUG = True
+# Secret key from environment, fallback for development only
+SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-dev-key-change-in-production')
+DEBUG = os.getenv('DEBUG', 'False').lower() in ('true', '1', 'yes')
 def _csv(value: str):
     return [item.strip() for item in value.split(',') if item.strip()]
 

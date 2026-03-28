@@ -6,8 +6,6 @@ services:
     buildCommand: bash build.sh
     startCommand: cd proctoring && gunicorn proctoring.wsgi:application --bind 0.0.0.0:$PORT --workers 1 --timeout 120
     envVars:
-      - key: PYTHON_VERSION
-        value: "3.11.9"
       - key: PYTHONUNBUFFERED
         value: "1"
       - key: DEBUG

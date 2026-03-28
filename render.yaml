@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: codecrux-lite
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: PORT
+        value: 8000
+      - key: PYTHONUNBUFFERED
+        value: "1"

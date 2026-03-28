@@ -13,7 +13,15 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.views.decorators.http import require_http_methods 
 from django.db.models import Sum, Avg
-from deepface import DeepFace 
+
+# Optional imports - will warn if not available but won't crash
+try:
+    from deepface import DeepFace
+    DEEPFACE_AVAILABLE = True
+except ImportError:
+    DEEPFACE_AVAILABLE = False
+    DeepFace = None
+
 from django.views.decorators.csrf import csrf_protect
 
 # NOTE: Ensure your models are imported correctly from your app's models.py

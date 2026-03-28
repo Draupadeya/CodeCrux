@@ -1,15 +1,41 @@
 import cv2
 import numpy as np
-from ultralytics import YOLO
-from .models import Event
-import speech_recognition as sr
-from pydub import AudioSegment
 import json
+
+# Optional ML/Audio imports
+try:
+    from ultralytics import YOLO
+    YOLO_AVAILABLE = True
+except ImportError:
+    YOLO_AVAILABLE = False
+    YOLO = None
+
+try:
+    import speech_recognition as sr
+    SR_AVAILABLE = True
+except ImportError:
+    SR_AVAILABLE = False
+    sr = None
+
+try:
+    from pydub import AudioSegment
+    PYDUB_AVAILABLE = True
+except ImportError:
+    PYDUB_AVAILABLE = False
+    AudioSegment = None
+
+from .models import Event
 
 SIM_THRESHOLD = 0.6  # face similarity threshold
 
-# Load YOLOv8 model (pretrained on COCO)
-yolo_model = YOLO("yolov8n.pt")  # small, fast version
+# Load YOLOv8 model (pretrained on COCO) - only if available
+yolo_model = None
+if YOLO_AVAILABLE:
+    try:
+        yolo_model = YOLO("yolov8n.pt")  # small, fast version
+    except Exception as e:
+        print(f"Warning: Could not load YOLO model: {e}")
+        YOLO_AVAILABLE = False
 
 # Expanded gadget synonyms for detection
 GADGET_SYNONYMS = [

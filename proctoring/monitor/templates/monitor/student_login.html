@@ -8,6 +8,102 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
+        /* Brand variables and polished title */
+        :root {
+            --brand-start: #7c3aed;
+            --brand-end: #06b6d4;
+            --brand-shadow: rgba(124,58,237,0.22);
+        }
+
+        .brand-title {
+            display: inline-block;
+            position: relative;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            background: linear-gradient(90deg, var(--brand-start), var(--brand-end));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            background-size: 200% 100%;
+            transition: transform 280ms cubic-bezier(.2,.9,.2,1), filter 280ms ease, text-shadow 300ms ease;
+            will-change: transform;
+            text-decoration: none;
+        }
+
+        /* glossy sweep */
+        .brand-title::before {
+            content: '';
+            position: absolute;
+            left: -40%;
+            top: -10%;
+            width: 60%;
+            height: 120%;
+            background: linear-gradient(90deg, rgba(255,255,255,0.0), rgba(255,255,255,0.28), rgba(255,255,255,0.0));
+            transform: skewX(-20deg);
+            opacity: 0.0;
+            transition: left 650ms cubic-bezier(.2,.9,.2,1), opacity 420ms ease;
+            pointer-events: none;
+        }
+
+        .brand-title:hover::before {
+            left: 140%;
+            opacity: 1;
+        }
+
+        .brand-title:hover {
+            transform: translateY(-4px) scale(1.02) rotate(-0.6deg);
+            text-shadow: 0 12px 30px var(--brand-shadow);
+            filter: drop-shadow(0 10px 30px var(--brand-shadow));
+        }
+
+        @keyframes brand-shimmer {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        @keyframes codecruxPulse {
+            0% { transform: scale(1) translateY(0); text-shadow: 0 0 0 rgba(124,58,237,0); }
+            35% { transform: scale(1.06) translateY(-4px); text-shadow: 0 14px 40px rgba(124,58,237,0.22); }
+            65% { transform: scale(1.03) translateY(-2px); text-shadow: 0 10px 30px rgba(124,58,237,0.18); }
+            100% { transform: scale(1) translateY(0); text-shadow: 0 0 0 rgba(124,58,237,0); }
+        }
+        /* Auto-scale and shine continuously; preserve brand-shimmer sweep */
+        .brand-title {
+            animation: codecruxPulse 3.6s ease-in-out infinite, brand-shimmer 6s linear infinite;
+            transform-origin: center;
+        }
+
+        /* Defensive: hide any leading icons inside brand header */
+        .brand-header > img, .brand-header > svg, .brand-header > i, .brand-header > .icon { display: none !important; }
+
+        /* Inputs: subtle focus glow */
+        input[type="text"], input[type="password"] {
+            transition: box-shadow 220ms ease, border-color 180ms ease, transform 180ms ease;
+        }
+        input[type="text"]:focus, input[type="password"]:focus {
+            box-shadow: 0 8px 30px rgba(99,102,241,0.08);
+            border-bottom-color: var(--brand-start);
+            transform: translateY(-1px);
+            outline: none;
+        }
+
+        /* Buttons: gradient and softer hover */
+        button[type="submit"] {
+            background: linear-gradient(90deg, var(--brand-start), var(--brand-end));
+            border: none;
+            transition: transform 180ms ease, box-shadow 220ms ease, opacity 180ms ease;
+        }
+        button[type="submit"]:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 16px 40px rgba(6,182,212,0.12);
+            opacity: 0.98;
+        }
+
+        /* Respect users who prefer reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            .brand-title, .brand-title::before { animation: none !important; transition: none !important; }
+            .brand-title:hover { transform: none !important; text-shadow: none !important; }
+        }
         body { font-family: 'Inter', sans-serif; }
         .bg-books {
             background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1495446815901-a7297e633e8d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');
@@ -128,12 +224,10 @@
 
     <div class="w-full lg:w-[40%] flex flex-col justify-center px-8 md:px-16 lg:px-24">
         
-        <div class="flex items-center gap-2 mb-12">
-            <div class="bg-indigo-100 p-2 rounded-lg">
-                <i data-lucide="sparkles" class="text-indigo-600 w-6 h-6"></i>
+
+            <div class="flex items-center gap-2 mb-12 brand-header">
+                <span class="brand-title text-2xl font-extrabold text-slate-800">CodeCrux</span>
             </div>
-            <span class="text-xl font-bold text-slate-800">CodeCrux</span>
-        </div>
 
         <h1 class="text-3xl font-bold text-slate-900 mb-2">Welcome back</h1>
         <p class="text-slate-500 mb-8 leading-relaxed">Enter your details to access your personalized learning workspace.</p>

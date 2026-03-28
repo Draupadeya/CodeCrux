@@ -60,6 +60,12 @@ urlpatterns = [
     path('api/courses/<int:course_id>/enroll/', views.enroll_student, name='enroll_student'),
     path('api/student/courses/', views.get_student_courses, name='get_student_courses'),
     path('api/student/courses/<str:roll_number>/', views.get_student_courses_by_roll, name='get_student_courses_by_roll'),
+    # DEBUG: quick enrollment inspector
+    path('api/debug/enrollments/<str:roll_number>/', views.debug_student_enrollments, name='debug_student_enrollments'),
+    # Store API endpoints
+    path('api/store/offers/', views.get_store_offers, name='get_store_offers'),
+    path('api/store/purchase/', views.purchase_offer, name='purchase_offer'),
+    path('api/store/purchased/', views.get_purchased_offers, name='get_purchased_offers'),
     
     # Exam API endpoints
     path('api/exams/create/', views.create_exam, name='create_exam'),
@@ -68,10 +74,15 @@ urlpatterns = [
     path('api/exams/<int:exam_id>/delete/', views.delete_exam, name='delete_exam'),
     path('api/exams/<int:exam_id>/submissions/', views.get_exam_submissions, name='get_exam_submissions'),
     path('api/exams/<int:exam_id>/submission/<str:roll_number>/', views.get_student_exam_submission, name='get_student_exam_submission'),
+    path('api/exams/<int:exam_id>/submission/<str:roll_number>/block/', views.block_exam_student, name='block_exam_student'),
+    path('api/exams/<int:exam_id>/submission/<str:roll_number>/unblock/', views.unblock_exam_student, name='unblock_exam_student'),
     path('api/exams/<int:exam_id>/export/', views.export_exam_results, name='export_exam_results'),
     path('api/exam/submit/', views.submit_exam_attempt, name='submit_exam_attempt'),
     path('api/analytics/', views.get_faculty_analytics, name='get_faculty_analytics'),
     path('api/change-password/', views.change_password, name='change_password'),
+    # FAQ endpoints
+    path('api/submit-faq/', views.submit_faq, name='submit_faq'),
+    path('api/faqs/', views.list_faqs_for_faculty, name='list_faqs_for_faculty'),
     path('api/courses/<int:course_id>/delete/', views.delete_course, name='delete_course'),
     path('api/student/exams/<str:roll_number>/', views.get_student_exams_by_roll, name='get_student_exams_by_roll'),
     
@@ -81,6 +92,7 @@ urlpatterns = [
     
     # StudyMate Frontend Routes
     path('studymate/dashboard/', views.studymate_dashboard, name='studymate_dashboard'),
+    path('studymate/store/', views.studymate_store, name='studymate_store'),
     path('studymate/exam/', views.proctored_exam_view, name='proctored_exam'),
     
     # 5. PROCTOR VIEWS
@@ -88,5 +100,5 @@ urlpatterns = [
    
     
     # URL to mark a quiz/code challenge complete
-  
+    path('api/courses/update/', views.update_course, name='update_course'),
 ]

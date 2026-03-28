@@ -713,3 +713,17 @@ Keep your response concise but comprehensive (max 3-4 paragraphs for explanation
             }, status=500)
     
     return JsonResponse({"status": "ready", "message": "AI Study Buddy is ready to help!"})
+
+
+@csrf_exempt
+def mistral_status(request):
+    """Simple status endpoint for Mistral configuration (no secrets returned)."""
+    try:
+        configured = bool(MISTRAL_API_KEY)
+        return JsonResponse({
+            "configured": configured,
+            "model": MISTRAL_MODEL,
+            "api_url": MISTRAL_API_URL
+        })
+    except Exception as e:
+        return JsonResponse({"configured": False, "error": str(e)}, status=500)

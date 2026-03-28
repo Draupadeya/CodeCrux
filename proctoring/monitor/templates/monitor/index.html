@@ -8,6 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
     <style>
         body { font-family: 'Inter', sans-serif; }
         .bg-books {
@@ -283,17 +284,62 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        /* Brand title (login page only): larger, auto-animated pulse + shimmer */
+        :root { --login-brand-start: #7c3aed; --login-brand-end: #06b6d4; --login-brand-shadow: rgba(124,58,237,0.22); }
+        /* Increased size for stronger branding on login (responsive) */
+        .brand-title { position: relative; display: inline-block; cursor: default; font-size: 2.75rem; line-height: 1.05; font-weight: 800; letter-spacing: -0.02em; transform-origin: center; }
+
+        /* Pulse for size emphasis */
+        @keyframes codecruxPulse {
+            0% { transform: scale(1) translateY(0); }
+            40% { transform: scale(1.12) translateY(-6px); }
+            70% { transform: scale(1.06) translateY(-3px); }
+            100% { transform: scale(1) translateY(0); }
+        }
+
+        /* Disco color sweep using a wide rainbow gradient moved across the text */
+        @keyframes discoSweep {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Apply disco gradient + pulse (scoped to login) */
+        .brand-title {
+            background: linear-gradient(90deg, #ff004d 0%, #ff7a00 12%, #ffee00 25%, #00d084 38%, #00c2ff 52%, #6a5aff 68%, #ff00c8 85%, #ff004d 100%);
+            background-size: 300% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: discoSweep 4.2s linear infinite, codecruxPulse 3.6s ease-in-out infinite;
+            text-shadow: 0 8px 30px rgba(0,0,0,0.06);
+        }
+
+        /* Responsive scaling so header remains usable on small viewports */
+        /* small adjustments to keep parity on narrow screens */
+        @media (max-width: 1024px) {
+            .brand-title { font-size: 2.1rem; }
+        }
+        @media (max-width: 640px) {
+            .brand-title { font-size: 1.6rem; }
+        }
+
+        /* hide any leading icons in this header (defensive) */
+        .brand-header > img, .brand-header > svg, .brand-header > i, .brand-header > .icon { display: none !important; }
+
+        /* Respect reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            .brand-title { animation: none !important; transform: none !important; text-shadow: none !important; }
+        }
     </style>
 </head>
 <body class="bg-white min-h-screen flex">
 
     <div class="w-full lg:w-[30%] flex flex-col justify-center px-8 md:px-16 lg:px-24">
         
-        <div class="flex items-center gap-2 mb-12">
-            <div class="bg-indigo-100 p-2 rounded-lg">
-                <i data-lucide="sparkles" class="text-indigo-600 w-6 h-6"></i>
-            </div>
-            <span class="text-xl font-bold text-slate-800">CodeCrux</span>
+        <div class="flex items-center gap-2 mb-12 brand-header">
+            <span class="text-xl font-bold text-slate-800 brand-title">CodeCrux</span>
         </div>
 
         <h1 class="text-3xl font-bold text-slate-900 mb-2">Welcome back</h1>

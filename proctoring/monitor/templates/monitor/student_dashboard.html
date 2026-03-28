@@ -67,6 +67,11 @@
             gap: 10px;
         }
 
+        .brand-title{background:linear-gradient(90deg,#7c3aed,#06b6d4);-webkit-background-clip:text;background-clip:text;color:transparent;display:inline-block;transition:transform 220ms ease,filter 220ms ease;will-change:transform}
+        .brand-title:hover{transform:translateY(-3px);filter:drop-shadow(0 6px 18px rgba(124,58,237,0.18));}
+        @keyframes brand-shimmer{0%{background-position:-120% 0}100%{background-position:120% 0}}
+        .brand-title{background-size:200% 100%;animation:brand-shimmer 4s linear infinite}
+
         .sidebar-menu {
             padding: 20px 0;
             flex: 1;
@@ -297,7 +302,7 @@
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <a href="#" class="brand-logo">
-                <i class="fas fa-code"></i> CodeCrux
+                <span class="brand-title">CodeCrux</span>
             </a>
         </div>
 

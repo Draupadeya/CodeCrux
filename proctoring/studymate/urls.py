@@ -13,6 +13,7 @@ urlpatterns = [
     path('api/generate-challenge/', views.generate_challenge, name='generate_challenge'),
     path('api/get-hint/', views.get_hint, name='get_hint'),
     path('api/summarize-content/', views.summarize_content, name='summarize_content'),
+    path('api/mistral-status/', views.mistral_status, name='mistral_status'),
     path('api/execute-code/', views.execute_code, name='execute_code'),
     path('api/get-current-student/', views.get_current_student, name='get_current_student'),
     path('api/ai-tutor/', views.ai_tutor, name='ai_tutor'),  # AI Study Buddy endpoint

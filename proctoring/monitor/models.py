@@ -9,6 +9,7 @@ class StudentProfile(models.Model):
     full_name = models.CharField(max_length=128)
     dob = models.DateField()  # Date of Birth
     roll_number = models.CharField(max_length=50, unique=True, null=False, blank=False)
+    coins = models.IntegerField(default=0)
     def __str__(self):
         return self.full_name
 
@@ -110,6 +111,24 @@ class Event(models.Model):
 # Course created by Faculty
 # ------------------------------
 class Course(models.Model):
+    @property
+    def youtube_id(self):
+        """Extracts the YouTube video ID from the video_url, supporting common formats."""
+        import re
+        if not self.video_url:
+            return None
+        # Patterns for common YouTube URL formats
+        patterns = [
+            r'youtu\.be/(?P<id>[\w-]{11})',
+            r'youtube\.com/watch\?v=(?P<id>[\w-]{11})',
+            r'youtube\.com/embed/(?P<id>[\w-]{11})',
+            r'youtube\.com/v/(?P<id>[\w-]{11})',
+        ]
+        for pattern in patterns:
+            match = re.search(pattern, self.video_url)
+            if match:
+                return match.group('id')
+        return None
     title = models.CharField(max_length=256)
     description = models.TextField(blank=True, null=True)
     thumbnail = models.ImageField(upload_to="course_thumbnails/", blank=True, null=True)
@@ -192,6 +211,50 @@ class ModuleProgress(models.Model):
 
     def __str__(self):
         return f"{self.enrollment.student.full_name} - {self.module.title}"
+
+
+# ==============================
+# Store / Promo models
+# ==============================
+class PromoOffer(models.Model):
+    title = models.CharField(max_length=256)
+    description = models.TextField(blank=True, null=True)
+    price_coins = models.PositiveIntegerField(default=0)
+    promo_code = models.CharField(max_length=128, blank=True, null=True)
+    image_url = models.CharField(max_length=1024, blank=True, null=True)
+    active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.title} ({self.price_coins} coins)"
+
+
+class PurchasedOffer(models.Model):
+    student = models.ForeignKey(StudentProfile, on_delete=models.CASCADE, related_name='purchases')
+    offer = models.ForeignKey(PromoOffer, on_delete=models.SET_NULL, null=True)
+    purchased_at = models.DateTimeField(auto_now_add=True)
+    shown_code = models.CharField(max_length=128, blank=True, null=True)
+    used = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.student.full_name} - {self.offer.title} @ {self.purchased_at.strftime('%Y-%m-%d %H:%M')}"
+
+
+# ------------------------------
+# Frequently Asked Questions (student-submitted, faculty-scoped)
+# ------------------------------
+class Faq(models.Model):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='faqs')
+    question = models.TextField()
+    answer = models.TextField(blank=True, null=True)
+    asked_by = models.ForeignKey(StudentProfile, on_delete=models.SET_NULL, null=True, blank=True)
+    times_asked = models.PositiveIntegerField(default=1)
+    answered = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    last_asked = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"FAQ ({self.course.title}): {self.question[:60]}"
 
 
 # ------------------------------

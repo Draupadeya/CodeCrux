@@ -17,8 +17,9 @@ from deepface import DeepFace
 from django.views.decorators.csrf import csrf_protect
 
 # NOTE: Ensure your models are imported correctly from your app's models.py
-from .models import Candidate, Session, Event, StudentProfile
+from .models import Candidate, Session, Event, StudentProfile, Faq
 from . import analyzer # Assuming 'analyzer' contains analyze_audio/analyze_frame logic
+from .models import PromoOffer, PurchasedOffer
 
 # Get the custom or default User model
 User = get_user_model() 
@@ -93,9 +94,42 @@ def handle_unified_login(request: HttpRequest):
 # Proctor Block/Unblock API Views (Restored and Correct)
 # ==========================
 
-@staff_member_required
+@csrf_exempt
 @require_http_methods(["POST"])
-@csrf_exempt # API views use csrf_exempt because they don't send form tokens
+@csrf_exempt
+@require_http_methods(["POST"])
+def update_course(request):
+    """API to update course details (title, description, category, level)"""
+    try:
+        data = json.loads(request.body)
+        course_id = data.get('id')
+        title = data.get('title')
+        description = data.get('description')
+        category = data.get('category')
+        level = data.get('level')
+
+        if not course_id:
+            return JsonResponse({'status': 'error', 'message': 'Missing course ID.'}, status=400)
+
+        from .models import Course
+        course = Course.objects.filter(id=course_id).first()
+        if not course:
+            return JsonResponse({'status': 'error', 'message': 'Course not found.'}, status=404)
+
+        # Optionally restrict to staff/faculty
+        user = request.user
+        if not (user.is_authenticated and (user.is_staff or hasattr(user, 'faculty_profile'))):
+            return JsonResponse({'status': 'error', 'message': 'Permission denied.'}, status=403)
+
+        if title: course.title = title
+        if description: course.description = description
+        if category: course.category = category
+        if level: course.level = level
+        course.save()
+
+        return JsonResponse({'status': 'ok', 'message': 'Course updated.'})
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
 def proctor_block_view(request):
     """Handles API request to block a candidate and all active sessions."""
     try:
@@ -160,7 +194,10 @@ def proctor_unblock_view(request):
     except json.JSONDecodeError:
         return JsonResponse({'status': 'error', 'message': 'Invalid JSON format.'}, status=400)
     except Exception as e:
-        return JsonResponse({'status': 'error', 'message': f'An error occurred: {str(e)}'}, status=500)@login_required
+        return JsonResponse({'status': 'error', 'message': f'An error occurred: {str(e)}'}, status=500)
+
+
+@login_required
 def redirect_to_dashboard(request: HttpRequest):
     """Routes the authenticated user after login redirect."""
     if request.user.is_staff or request.user.is_superuser:
@@ -249,7 +286,12 @@ def student_dashboard(request: HttpRequest):
         "progress_percent": progress_percent, 
     }
     
-    return render(request, "monitor/student_dashboard.html", context)
+    response = render(request, "monitor/student_dashboard.html", context)
+    # Add cache-busting headers to ensure styles always load fresh
+    response['Cache-Control'] = 'no-cache, no-store, must-revalidate, max-age=0'
+    response['Pragma'] = 'no-cache'
+    response['Expires'] = '0'
+    return response
 
 
 def admin_dashboard(request):
@@ -320,7 +362,101 @@ def admin_dashboard(request):
             student.avg_progress = student_enrollments.aggregate(avg=Avg('progress'))['avg'] or 0
         context['students'] = all_students
     
-    return render(request, 'monitor/admin_dashboard.html', context)
+    response = render(request, 'monitor/admin_dashboard.html', context)
+    # Add cache-busting headers to ensure styles always load fresh
+    response['Cache-Control'] = 'no-cache, no-store, must-revalidate, max-age=0'
+    response['Pragma'] = 'no-cache'
+    response['Expires'] = '0'
+    return response
+
+
+# ------------------------------
+# FAQ API Endpoints
+# ------------------------------
+@csrf_exempt
+@require_http_methods(["POST"])
+def submit_faq(request):
+    """Student-facing endpoint to submit a question for a course.
+    If the same question exists for the course, increment its times_asked.
+    """
+    try:
+        data = json.loads(request.body)
+        question = (data.get('question') or '').strip()
+        course_id = data.get('course_id')
+        if not question or not course_id:
+            return JsonResponse({'status': 'error', 'message': 'Missing question or course_id.'}, status=400)
+
+        from .models import Course
+        course = Course.objects.filter(id=course_id).first()
+        if not course:
+            return JsonResponse({'status': 'error', 'message': 'Course not found.'}, status=404)
+
+        # Try to find an existing similar FAQ for this course (exact match)
+        faq = Faq.objects.filter(course=course, question__iexact=question).first()
+        if faq:
+            faq.times_asked = faq.times_asked + 1
+            faq.save()
+        else:
+            # Try to attach asked_by if student profile is available
+            asked_by = None
+            try:
+                asked_by = request.user.studentprofile
+            except Exception:
+                asked_by = None
+            faq = Faq.objects.create(course=course, question=question, asked_by=asked_by)
+
+        return JsonResponse({'status': 'ok', 'faq': {
+            'id': faq.id,
+            'question': faq.question,
+            'times_asked': faq.times_asked,
+            'answered': faq.answered,
+            'created_at': faq.created_at.isoformat()
+        }})
+    except json.JSONDecodeError:
+        return JsonResponse({'status': 'error', 'message': 'Invalid JSON.'}, status=400)
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+
+
+@login_required
+@require_http_methods(["GET"])
+def list_faqs_for_faculty(request):
+    """Faculty-facing endpoint: returns FAQs for courses owned by the requesting faculty.
+    Also computes percent share for each FAQ within its course (times_asked / total * 100).
+    """
+    try:
+        # Only faculty profiles should access this list normally
+        faculty = getattr(request.user, 'faculty_profile', None)
+        if not faculty:
+            return JsonResponse({'status': 'error', 'message': 'Permission denied.'}, status=403)
+
+        faqs_qs = Faq.objects.filter(course__faculty=faculty).select_related('course')
+
+        # Group totals per course
+        totals = {}
+        for f in faqs_qs:
+            cid = f.course_id
+            totals[cid] = totals.get(cid, 0) + f.times_asked
+
+        faqs_list = []
+        for f in faqs_qs.order_by('-last_asked'):
+            total_for_course = totals.get(f.course_id, 1)
+            percent = round((f.times_asked / total_for_course) * 100) if total_for_course > 0 else 0
+            faqs_list.append({
+                'id': f.id,
+                'course_id': f.course_id,
+                'course_title': f.course.title,
+                'question': f.question,
+                'answer': f.answer or '',
+                'times_asked': f.times_asked,
+                'percent': percent,
+                'answered': f.answered,
+                'last_asked': f.last_asked.isoformat(),
+            })
+
+        return JsonResponse({'status': 'ok', 'faqs': faqs_list})
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
 
 
 @staff_member_required
@@ -874,6 +1010,82 @@ def proctor_unblock_view(request):
         return JsonResponse({'status': 'error', 'message': 'Invalid JSON format.'}, status=400)
     except Exception as e:
         return JsonResponse({'status': 'error', 'message': f'An error occurred: {str(e)}'}, status=500)
+
+
+@staff_member_required
+@require_http_methods(["POST"])
+@csrf_exempt
+def block_exam_student(request, exam_id, roll_number):
+    """Block a candidate by roll number for a specific exam (faculty only).
+    This finds the Candidate by roll_number and blocks them and their active sessions.
+    """
+    try:
+        # Verify faculty owns the exam
+        exam = get_object_or_404(Exam, id=exam_id)
+        try:
+            faculty = request.user.faculty_profile
+        except:
+            return JsonResponse({'status': 'error', 'message': 'Permission denied.'}, status=403)
+        if exam.faculty != faculty and not request.user.is_superuser:
+            return JsonResponse({'status': 'error', 'message': 'Permission denied for this exam.'}, status=403)
+
+        # Find Candidate by roll_number
+        candidate = Candidate.objects.filter(roll_number=roll_number).first()
+        if not candidate:
+            return JsonResponse({'status': 'error', 'message': 'Candidate not found.'}, status=404)
+
+        reason = ''
+        try:
+            payload = json.loads(request.body.decode('utf-8')) if request.body else {}
+            reason = payload.get('reason', 'Blocked by faculty via admin dashboard')
+        except Exception:
+            reason = 'Blocked by faculty via admin dashboard'
+
+        candidate.blocked = True
+        candidate.blocked_reason = reason
+        candidate.save()
+
+        Session.objects.filter(candidate=candidate, ended_at__isnull=True).update(
+            blocked=True,
+            verdict='blocked',
+            ended_at=datetime.datetime.now()
+        )
+
+        return JsonResponse({'status': 'success', 'message': f'Candidate {roll_number} blocked.'})
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+
+
+@staff_member_required
+@require_http_methods(["POST"])
+@csrf_exempt
+def unblock_exam_student(request, exam_id, roll_number):
+    """Unblock a candidate by roll number for a specific exam (faculty only)."""
+    try:
+        exam = get_object_or_404(Exam, id=exam_id)
+        try:
+            faculty = request.user.faculty_profile
+        except:
+            return JsonResponse({'status': 'error', 'message': 'Permission denied.'}, status=403)
+        if exam.faculty != faculty and not request.user.is_superuser:
+            return JsonResponse({'status': 'error', 'message': 'Permission denied for this exam.'}, status=403)
+
+        candidate = Candidate.objects.filter(roll_number=roll_number).first()
+        if not candidate:
+            return JsonResponse({'status': 'error', 'message': 'Candidate not found.'}, status=404)
+
+        candidate.blocked = False
+        candidate.blocked_reason = ''
+        candidate.save()
+
+        Session.objects.filter(candidate=candidate, ended_at__isnull=True, blocked=True).update(
+            blocked=False,
+            verdict='clean'
+        )
+
+        return JsonResponse({'status': 'success', 'message': f'Candidate {roll_number} unblocked.'})
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
 @login_required
 def exam_flow(request: HttpRequest):
     """
@@ -976,6 +1188,11 @@ def create_course(request):
         
         data = json.loads(request.body)
         
+        # If faculty explicitly selected students, auto-publish so assigned students can see the course
+        student_ids = data.get('student_ids', [])
+        requested_publish = bool(data.get('is_published', False))
+        auto_publish = bool(student_ids)
+
         course = Course.objects.create(
             title=data.get('title'),
             description=data.get('description', ''),
@@ -984,12 +1201,12 @@ def create_course(request):
             category=data.get('category', ''),
             level=data.get('level', 'beginner'),
             duration=data.get('duration', ''),
-            is_published=data.get('is_published', False),
+            is_published=(requested_publish or auto_publish),
             faculty=faculty
         )
         
         # Enroll selected students
-        student_ids = data.get('student_ids', [])
+        # (student_ids was read above)
         if student_ids:
             from .models import StudentProfile, Enrollment
             students = StudentProfile.objects.filter(id__in=student_ids)
@@ -1250,6 +1467,37 @@ def get_student_courses_by_roll(request, roll_number):
         return JsonResponse({'courses': courses_data, 'student_name': student.full_name})
     except Exception as e:
         return JsonResponse({'error': str(e), 'courses': []}, status=500)
+
+
+@csrf_exempt
+def debug_student_enrollments(request, roll_number):
+    """DEBUG: Return raw enrollments for a student (includes course publish flag).
+    Use this to quickly verify whether the backend created Enrollment rows and
+    whether the related Course instances are published.
+    """
+    try:
+        try:
+            student = StudentProfile.objects.get(roll_number=roll_number)
+        except StudentProfile.DoesNotExist:
+            return JsonResponse({'error': 'Student not found', 'enrollments': []}, status=200)
+
+        enrollments = Enrollment.objects.filter(student=student).select_related('course')
+
+        data = []
+        for e in enrollments:
+            c = e.course
+            data.append({
+                'enrollment_id': e.id,
+                'course_id': c.id if c else None,
+                'course_title': c.title if c else None,
+                'course_is_published': c.is_published if c else None,
+                'enrolled_at': e.enrolled_at.isoformat() if hasattr(e, 'enrolled_at') and e.enrolled_at else None,
+                'progress': getattr(e, 'progress', None),
+            })
+
+        return JsonResponse({'enrollments': data, 'student_roll': student.roll_number, 'student_name': student.full_name})
+    except Exception as exc:
+        return JsonResponse({'error': str(exc), 'enrollments': []}, status=500)
 
 
 # ==========================
@@ -2046,6 +2294,115 @@ def studymate_dashboard(request):
         return HttpResponseNotFound('StudyMate dashboard not found')
 
 
+@csrf_exempt
+def get_store_offers(request):
+    """Return available promo offers and student's coin balance."""
+    try:
+        offers = PromoOffer.objects.filter(active=True).order_by('price_coins')
+        offers_data = []
+        for o in offers:
+            offers_data.append({
+                'id': o.id,
+                'title': o.title,
+                'description': o.description,
+                'price_coins': o.price_coins,
+                'image_url': o.image_url,
+            })
+
+        # Determine student coins and purchased ids if roll_number provided
+        roll = request.GET.get('roll_number') or None
+        student = None
+        if request.user.is_authenticated:
+            student = getattr(request.user, 'studentprofile', None)
+        elif roll:
+            student = StudentProfile.objects.filter(roll_number=roll).first()
+
+        student_coins = student.coins if student else 0
+        purchased_ids = []
+        if student:
+            purchased_ids = list(student.purchases.values_list('offer__id', flat=True))
+
+        return JsonResponse({'offers': offers_data, 'coins': student_coins, 'purchased_offer_ids': purchased_ids})
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+
+@csrf_exempt
+def purchase_offer(request):
+    """Purchase an offer using coins. Expects POST { offer_id, roll_number (optional) }"""
+    try:
+        data = json.loads(request.body)
+        offer_id = data.get('offer_id')
+        roll = data.get('roll_number')
+
+        if not offer_id:
+            return JsonResponse({'error': 'Missing offer_id'}, status=400)
+
+        offer = PromoOffer.objects.filter(id=offer_id, active=True).first()
+        if not offer:
+            return JsonResponse({'error': 'Offer not found'}, status=404)
+
+        # Resolve student
+        student = None
+        if request.user.is_authenticated:
+            student = getattr(request.user, 'studentprofile', None)
+        elif roll:
+            student = StudentProfile.objects.filter(roll_number=roll).first()
+
+        if not student:
+            return JsonResponse({'error': 'Student not found'}, status=404)
+
+        # Check if already purchased
+        existing = PurchasedOffer.objects.filter(student=student, offer=offer).first()
+        if existing:
+            return JsonResponse({'promo_code': existing.shown_code, 'message': 'Already purchased', 'remaining_coins': student.coins})
+
+        if student.coins < offer.price_coins:
+            return JsonResponse({'error': 'Insufficient coins'}, status=400)
+
+        # Deduct coins and create purchase
+        student.coins -= offer.price_coins
+        student.save()
+
+        purchase = PurchasedOffer.objects.create(student=student, offer=offer, shown_code=offer.promo_code)
+
+        return JsonResponse({'promo_code': purchase.shown_code, 'remaining_coins': student.coins})
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return JsonResponse({'error': str(e)}, status=500)
+
+
+@csrf_exempt
+def get_purchased_offers(request):
+    """Return purchased offers for a student. Accepts roll_number or authenticated user."""
+    try:
+        roll = request.GET.get('roll_number')
+        student = None
+        if request.user.is_authenticated:
+            student = getattr(request.user, 'studentprofile', None)
+        elif roll:
+            student = StudentProfile.objects.filter(roll_number=roll).first()
+
+        if not student:
+            return JsonResponse({'error': 'Student not found'}, status=404)
+
+        purchases = PurchasedOffer.objects.filter(student=student).select_related('offer').order_by('-purchased_at')
+        data = []
+        for p in purchases:
+            data.append({
+                'offer_id': p.offer.id if p.offer else None,
+                'title': p.offer.title if p.offer else '',
+                'purchased_at': p.purchased_at.isoformat(),
+                'promo_code': p.shown_code,
+                'used': p.used,
+            })
+
+        return JsonResponse({'purchases': data, 'coins': student.coins})
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+
 def proctored_exam_view(request):
     """Serve the proctored exam page"""
     from django.conf import settings
@@ -2063,6 +2420,20 @@ def proctored_exam_view(request):
     except FileNotFoundError:
         from django.http import HttpResponseNotFound
         return HttpResponseNotFound('Proctored exam page not found')
+
+
+def studymate_store(request):
+    """Serve the StudyMate store page"""
+    from django.conf import settings
+    frontend_path = settings.BASE_DIR.parent.parent / 'frontend' / 'store.html'
+    try:
+        with open(frontend_path, 'r', encoding='utf-8') as f:
+            html_content = f.read()
+        from django.http import HttpResponse
+        return HttpResponse(html_content, content_type='text/html')
+    except FileNotFoundError:
+        from django.http import HttpResponseNotFound
+        return HttpResponseNotFound('Store page not found')
 
 
 # ==========================

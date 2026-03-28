@@ -21,16 +21,23 @@ from django.conf.urls.static import static
 from monitor import views
 from django.contrib.auth import views as auth_views
 from django.views.generic import TemplateView
+from django.views.generic.base import RedirectView
+from django.conf import settings as _dj_settings
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index, name='index'),
     path('', include('monitor.urls')),
+    # Also expose monitor app under /monitor/ for legacy links and external tools
+    path('monitor/', include('monitor.urls')),
     path('courses/', include('courses.urls')),  # StudyMate courses integration
     path('studymate/', include('studymate.urls')), # New StudyMate app
     #path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/login/', views.handle_unified_login, name='accounts_login_fallback'),
+    # Serve a project favicon at root to avoid 404s from browsers requesting /favicon.ico
+    # Redirect to the static file so collectstatic / staticfiles serving works in dev/prod.
+    path('favicon.ico', RedirectView.as_view(url=_dj_settings.STATIC_URL + 'favicon.ico', permanent=False)),
 ]
 
 if settings.DEBUG:

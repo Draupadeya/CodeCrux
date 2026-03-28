@@ -57,7 +57,8 @@ FRONTEND_PATH = SPARKLESS_ROOT / "frontend"
 def _mistral_chat(prompt, temperature=0.25, max_tokens=400):
     """Call Mistral chat completion and return text content."""
     if not MISTRAL_API_KEY:
-        raise ValueError("MISTRAL_API_KEY not configured")
+        print("Warning: MISTRAL_API_KEY not configured - AI features unavailable")
+        return f"[AI Feature Unavailable - MISTRAL_API_KEY not set]"
 
     try:
         resp = requests.post(

@@ -1543,7 +1543,8 @@ MISTRAL_MODEL = "mistral-small-latest"
 def _mistral_generate_exam(prompt, temperature=0.7, max_tokens=3000):
     """Call Mistral API to generate exam questions."""
     if not MISTRAL_API_KEY:
-        raise ValueError("MISTRAL_API_KEY not configured - set environment variable")
+        print("Warning: MISTRAL_API_KEY not configured - AI exam generation unavailable")
+        return {"choices": [{"message": {"content": "[AI Feature Unavailable - MISTRAL_API_KEY not set]"}}]}
     
     try:
         resp = requests.post(

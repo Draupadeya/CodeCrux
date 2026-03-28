@@ -44,10 +44,10 @@ MISTRAL_MODEL = os.getenv("MISTRAL_MODEL", "mistral-small-latest")
 MISTRAL_API_URL = os.getenv("MISTRAL_API_URL", "https://api.mistral.ai/v1/chat/completions")
 ASMEBLYAI_API_KEY = os.getenv("ASSEMBLYAI_API_KEY")
 
-if not MISTRAL_API_KEY:
-    raise ValueError("MISTRAL_API_KEY not found in environment variables!")
-
-print(f"✓ Loaded Mistral Key: {MISTRAL_API_KEY[:10]}...")
+if MISTRAL_API_KEY:
+    print(f"✓ Loaded Mistral Key: {MISTRAL_API_KEY[:10]}...")
+else:
+    print("Warning: MISTRAL_API_KEY not found in environment variables. AI features will be unavailable.")
 
 # --- Setup ---
 app = Flask(__name__)

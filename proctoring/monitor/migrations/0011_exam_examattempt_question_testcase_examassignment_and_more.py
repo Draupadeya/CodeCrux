@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('monitor', '0010_add_study_hours'),
+        ('monitor', '0010_add_study_hours'),  
     ]
 
     operations = [

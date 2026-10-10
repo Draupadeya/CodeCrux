@@ -9,7 +9,7 @@ window.addEventListener('DOMContentLoaded', function() {
   canvas.style.width = '100vw';
   canvas.style.height = '100vh';
   canvas.style.zIndex = '0';
-  canvas.style.display = 'block';
+  canvas.style.display = 'block'; 
   document.body.prepend(canvas);
 
   // Setup Three.js scene

@@ -6,7 +6,7 @@
 Open PowerShell and run:
 ```powershell
 cd c:\sparkless\video_proctoring_project\proctoring
-pip install deepface opencv-python pillow tensorflow
+pip install deepface opencv-python pillow tensorflow 
 ```
 
 **Note:** First-time setup will download AI models (~100MB). This may take a few minutes.

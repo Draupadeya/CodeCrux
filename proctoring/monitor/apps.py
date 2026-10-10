@@ -6,4 +6,4 @@ class MonitorConfig(AppConfig):
     name = 'monitor'
 
     def ready(self):
-        import monitor.signals  # ensure signals are registered
+        import monitor.signals  # ensure signals are registered 

@@ -17,7 +17,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='session',
-            name='exam_score',
+            name='exam_score', 
             field=models.FloatField(blank=True, null=True),
         ),
         migrations.AddField(

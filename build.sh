@@ -6,7 +6,7 @@ echo "Python version: $(python --version)"
 echo "Pip version: $(pip --version)"
 
 echo ""
-echo "Installing dependencies from requirements.txt..."
+echo "Installing dependencies from requirements.txt..." 
 pip install --no-cache-dir -r requirements.txt
 
 echo ""

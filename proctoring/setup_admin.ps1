@@ -10,7 +10,7 @@ function Show-Menu {
     Write-Host "1. Delete ALL users (except superuser)"
     Write-Host "2. Load sample students from CSV"
     Write-Host "3. Add single student"
-    Write-Host "4. Open Admin Portal (browser)"
+    Write-Host "4. Open Admin Portal (browser)" 
     Write-Host "5. Run development server"
     Write-Host "6. Exit"
     Write-Host ""

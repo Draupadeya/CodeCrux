@@ -10,7 +10,7 @@ from pathlib import Path
 API_URL = "http://127.0.0.1:5000"
 
 def test_health():
-    """Test if server is running"""
+    """Test if server is running""" 
     print("🔍 Testing server health...")
     try:
         response = requests.get(f"{API_URL}/health", timeout=5)

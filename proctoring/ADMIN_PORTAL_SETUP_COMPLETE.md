@@ -8,7 +8,7 @@
 - Supports adding individual students via command line
 - Automatic StudentProfile creation linked to User accounts
 
-### 2. **Enhanced Admin Portal**
+### 2. **Enhanced Admin Portal** 
 - **Location:** `/admin/`
 - **Admin Title:** "SparkLess Admin Portal"
 - **Features:**

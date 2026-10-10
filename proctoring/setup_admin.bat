@@ -6,7 +6,7 @@ setlocal enabledelayedexpansion
 :menu
 cls
 echo.
-echo ========================================
+echo ======================================== 
 echo   SparkLess Admin Portal - Setup Menu
 echo ========================================
 echo.

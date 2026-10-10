@@ -4,7 +4,7 @@ window.addEventListener('DOMContentLoaded', function() {
   const canvas = document.createElement('canvas');
   canvas.id = 'bg-canvas';
   canvas.style.position = 'fixed';
-  canvas.style.top = '0';
+  canvas.style.top = '0'; 
   canvas.style.left = '0';
   canvas.style.width = '100vw';
   canvas.style.height = '100vh';

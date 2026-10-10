@@ -7,7 +7,7 @@ urlpatterns = [
     path('api/login/', api.LoginAPI.as_view(), name='api_login'),
     path('api/user/', api.UserInfoAPI.as_view(), name='api_user_info'),
 
-    # 1. BASE AND AUTHENTICATION HANDLERS
+    # 1. BASE AND AUTHENTICATION HANDLERS  
     # The root path. Must be UNPROTECTED.
     path('', views.index, name='index'), 
 

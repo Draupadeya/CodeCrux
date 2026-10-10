@@ -4,7 +4,7 @@ from rest_framework import status
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from .models import StudentProfile
-
+ 
 class LoginAPI(APIView):
     def post(self, request):
         username = request.data.get('email') # Using email as username for now, or map it

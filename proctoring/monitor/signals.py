@@ -9,4 +9,4 @@ def set_student_password(sender, instance, created, **kwargs):
         dob_str = instance.dob.strftime('%Y%m%d')  # Format: YYYYMMDD
         user = instance.user
         user.set_password(dob_str)
-        user.save()
+        user.save() 

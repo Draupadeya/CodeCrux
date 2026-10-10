@@ -3,7 +3,7 @@ Test script for mood analysis API
 Demonstrates how to use the mood analysis endpoints
 """
 
-import cv2
+import cv2 
 import base64
 import requests
 import json

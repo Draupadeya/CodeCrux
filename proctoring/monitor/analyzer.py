@@ -6,7 +6,7 @@ try:
     NUMPY_AVAILABLE = True
 except ImportError:
     NUMPY_AVAILABLE = False
-    np = None
+    np = None  
 
 cv2 = None
 YOLO = None

@@ -11,7 +11,7 @@ print("DATABASE CHECK")
 print("=" * 60)
 
 # Count all records
-print(f"\nTotal Exams: {Exam.objects.count()}")
+print(f"\nTotal Exams: {Exam.objects.count()}") 
 print(f"Total Questions: {Question.objects.count()}")
 print(f"Total Students: {StudentProfile.objects.count()}")
 print(f"Total Assignments: {ExamAssignment.objects.count()}")

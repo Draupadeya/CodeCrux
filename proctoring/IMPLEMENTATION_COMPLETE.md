@@ -5,7 +5,7 @@
 All components have been successfully created and configured for managing student and faculty credentials through the Django Admin Portal.
 
 ---
-
+ 
 ## 📦 What Was Delivered
 
 ### 1. **Management Command System** ✅

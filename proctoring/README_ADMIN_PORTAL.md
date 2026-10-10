@@ -3,7 +3,7 @@
 ## ✅ System Ready!
 
 Your SparkLess Django Admin Portal has been fully configured for student and faculty credential management.
-
+ 
 ---
 
 ## 📋 What Was Created

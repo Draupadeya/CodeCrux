@@ -1,383 +1,263 @@
-# CodeCrux - Advanced Video Proctoring & Exam Management System
+# CODE CRUX
+### AI-Powered Smart Education and Virtual Engineering Learning Platform
 
-![Python](https://img.shields.io/badge/Python-3.11-blue)
-![Django](https://img.shields.io/badge/Django-4.2-green)
-![License](https://img.shields.io/badge/License-MIT-yellow)
+> **Learn Smarter, Visualize in 3D, Practice in Virtual Labs, and Innovate with AI.**
 
-**CodeCrux** is a comprehensive video proctoring platform designed for secure online examination. It combines real-time proctoring with AI-powered analysis to ensure exam integrity.
+## 🚀 About the Project
 
-## 🎯 Features
+CODE CRUX is an AI-powered smart education platform designed to transform traditional engineering education into an interactive, personalized, and immersive learning experience.
 
-### 🔒 Security & Proctoring
-- **Real-time Webcam Monitoring** — Continuous video stream during exams
-- **Microphone Testing** — Verify audio input quality
-- **Face Recognition & Verification** — Multi-factor identity verification using face embeddings
-- **Screen Activity Monitoring** — Track suspicious behavior patterns
-- **Automatic Candidate Blocking** — Flag and block suspicious users
+The platform integrates Artificial Intelligence (AI), 3D visualization, Augmented Reality (AR), Virtual Reality (VR), virtual laboratories, coding practice, and intelligent assessments into one unified ecosystem.
 
-### 📊 Exam Management
-- **Exam Scheduling** — Create and manage scheduled exams
-- **Question & Test Cases** — Support for programming assignments with test validation
-- **Exam Attempts** — Track multiple attempts per student
-- **Real-time Performance Metrics** — Analyze student performance
+It helps students understand complex concepts, practice practical skills, clarify doubts using AI, and explore engineering systems through interactive visualizations.
 
-### 🧠 AI-Powered Analysis
-- **Mood Detection** — Analyze emotional state during exams (stress, frustration, etc.)
-- **Audio Analysis** — Detect background noise, speech patterns
-- **Behavior Analysis** — ML-based anomaly detection
-- **Report Generation** — Comprehensive proctoring reports with evidence
+## 🎯 Problem Statement
 
-### 👥 User Management
-- **Student Portal** — Dashboard with courses, exams, certificates
-- **Faculty Dashboard** — Create exams, monitor students, view analytics
-- **Admin Panel** — System administration and user management
-- **Role-Based Access Control** — Student, Faculty, Admin roles
+**Student Innovation – Smart Education**
 
-### 📚 Course Management
-- **YouTube Video Integration** — Process video transcripts for courses
-- **Study Materials** — Module-based learning paths
-- **Quiz Generation** — AI-powered quiz creation from content
-- **Progress Tracking** — Monitor student advancement
+Digital learning should enable students to learn more effectively, efficiently, flexibly, and comfortably. CODE CRUX addresses the challenges of theoretical learning, limited laboratory access, lengthy lectures, fragmented learning tools, and difficulty understanding complex engineering concepts.
 
-### 🎓 Additional Features
-- **Payment/Coins System** — In-app purchase system for course access
-- **FAQ Management** — Knowledge base for students
-- **Session Management** — Track exam sessions and timestamps
+## ✨ Key Features
 
----
+### 🤖 AI-Powered Learning
+- **AI Course Creation:** Organizes supported long-form video lectures into smaller learning modules.
+- **StudyBuddy AI:** Helps students clarify doubts and understand course-related concepts.
+- **Personalized Learning:** Helps identify topics that may require additional practice.
+- **Multilingual Learning:** Supports learning in multiple languages through available language integrations.
 
-## 🚀 Quick Start
+### 📚 Integrated Learning Environment
+- Course modules and learning resources.
+- Digital notes and coding practice.
+- Integrated compiler support for programming practice.
+- Learning progress and performance tracking.
+
+### 🧊 3D, AR and VR Learning
+- Interactive 3D engineering visualizations.
+- AR-based exploration of engineering models.
+- VR-based immersive learning experiences.
+- Virtual engineering laboratories for practical exploration.
+
+### 🧪 Department-Specific Virtual Labs
+
+**Computer Science and Engineering (CSE)**
+- Coding practice and algorithm visualization.
+- 3D AR Practice Lab.
+- Neural-network visualization using immersive learning.
+- AI-assisted course learning.
+
+**Electronics and Communication Engineering (ECE)**
+- Electronic circuit simulations.
+- Arduino and electronic component visualizations.
+- Communication and satellite-system concepts.
+- Virtual electronics laboratory experiences.
+
+**Biomedical Engineering**
+- 3D visualization of the human heart, eye, and skeleton.
+- Biomedical equipment and kidney dialysis concepts.
+- Virtual biomedical laboratory experiences.
+
+**Mechanical Engineering**
+- 3D car engines and motorbike components.
+- Mechanical assemblies and component exploration.
+- Four-stroke engine visualization.
+- Mechanical simulation experiences.
+
+**Civil Engineering**
+- Building and bridge visualization.
+- Blueprint and structural concepts.
+- 3D models of buildings, bridges, and dams.
+- Virtual civil engineering experiences.
+
+### 🛡️ AI-Assisted Examination System
+- Monitoring of configured indicators of potentially suspicious exam activity.
+- Recording and review of relevant examination events.
+- Faculty access to examination-related information.
+- Support for controlled online assessments.
+
+Automated flags should be reviewed by authorized faculty before consequential action is taken.
+
+### 👨‍🏫 Faculty Dashboard
+- Student learning progress monitoring.
+- Assessment management.
+- Review of flagged examination events.
+- Student access management.
+- Learning and performance insights.
+
+### 🏆 Certificates
+The platform can support certificates for eligible course completions and assessments, helping students showcase their learning achievements.
+
+## 🛠️ Technology Stack
+
+| Component | Technologies |
+|---|---|
+| Frontend | React.js, Tailwind CSS |
+| Backend | Python, Django |
+| API Development | Django REST Framework |
+| 3D Visualization | Three.js, WebGL |
+| AI Integration | Mistral AI |
+| External Services | YouTube API, translation services, cloud storage |
+| Database | Configured application database |
+
+*The exact integrations depend on the implemented modules and project configuration.*
+
+## 🏗️ System Architecture
+
+```text
+                 STUDENTS AND FACULTY
+                          |
+                          v
+              REACT.JS + TAILWIND CSS
+                          |
+                          v
+               DJANGO REST FRAMEWORK
+                          |
+              +-----------+-----------+
+              |           |           |
+              v           v           v
+          AI SERVICES  DATABASE   EXTERNAL APIs
+          Mistral AI   App Data   YouTube, etc.
+              |
+              v
+       DEPARTMENT LEARNING MODULES
+              |
+       +------+------+------+------+
+       |      |      |      |      |
+      CSE    ECE   BME   Mechanical Civil
+              |
+              v
+        3D / AR / VR LEARNING
+        VIRTUAL LABORATORIES
+        CODING AND ASSESSMENTS
+        FACULTY DASHBOARD
+```
+
+## 🔄 How It Works
+
+1. Students and faculty sign in to the platform.
+2. Students access their department-specific dashboard.
+3. Students select a course or provide a supported lecture URL.
+4. The platform organizes available content into learning modules.
+5. Students use Notes, Compiler, and StudyBuddy AI while learning.
+6. Students explore 3D models, AR experiences, and virtual laboratories.
+7. Students complete available coding exercises and assessments.
+8. Faculty monitor learning progress and review examination events where applicable.
+
+## 💻 Getting Started
+
+The following steps are a general guide. Adapt the directory names and commands to match the actual repository.
 
 ### Prerequisites
-- Python 3.11+
-- PostgreSQL (production) / SQLite (development)
-- OpenCV & TensorFlow (for video analysis)
-- FFmpeg (for video processing)
 
-### Installation
+- Python
+- Node.js and npm
+- Git
+- A database configured for the Django application
+- API credentials for enabled external services
 
-1. **Clone the repository:**
+### 1. Clone the Repository
+
 ```bash
-git clone https://github.com/Draupadeya/CodeCrux.git
-cd CodeCrux/video_proctoring_project
+git clone <your-repository-url>
+cd <repository-folder>
 ```
 
-2. **Create and activate virtual environment:**
+### 2. Set Up the Backend
+
+Create a virtual environment:
+
 ```bash
-python -m venv venv
-
-# On Windows:
-venv\Scripts\activate
-
-# On macOS/Linux:
-source venv/bin/activate
+python -m venv .venv
 ```
 
-3. **Install dependencies:**
+Activate it on Windows:
+
+```powershell
+.venv\Scripts\Activate.ps1
+```
+
+Install the dependencies if `requirements.txt` exists:
+
 ```bash
 pip install -r requirements.txt
 ```
 
-4. **Setup Django:**
+Apply database migrations:
+
 ```bash
-cd proctoring
 python manage.py migrate
-python manage.py createsuperuser
 ```
 
-5. **Collect static files:**
+Start the Django development server:
+
 ```bash
-python manage.py collectstatic --noinput
+python manage.py runserver
 ```
 
-6. **Run development server:**
+### 3. Set Up the Frontend
+
+Open another terminal and navigate to the frontend directory:
+
 ```bash
-python manage.py runserver 8000
+npm install
+npm run dev
 ```
 
-Visit: **http://localhost:8000**
+Use the scripts defined in your project's `package.json`. Configure the frontend API URL to point to the backend server.
 
----
+## 🔐 Environment Configuration
 
-## 📦 Project Structure
+Store API keys and secret values in environment variables or a local `.env` file excluded from version control.
 
-```
-video_proctoring_project/
-├── proctoring/                  # Django project settings
-│   ├── settings.py             # Configuration
-│   ├── urls.py                 # URL routing
-│   ├── wsgi.py                 # Production WSGI
-│   └── asgi.py                 # WebSocket support
-│
-├── monitor/                     # Main proctoring app
-│   ├── models.py               # Database models
-│   ├── views.py                # Request handlers
-│   ├── api.py                  # REST endpoints
-│   ├── analyzer.py             # AI analysis engine
-│   ├── management/             # Custom commands
-│   ├── migrations/             # Database migrations
-│   ├── templates/              # HTML templates
-│   └── static/                 # CSS, JS files
-│
-├── courses/                     # Course management
-│   ├── models.py
-│   ├── views.py
-│   └── urls.py
-│
-├── studymate/                   # Study features
-│
-├── requirements.txt            # Python dependencies
-├── manage.py                   # Django CLI
-├── Procfile                    # Production configuration
-├── Dockerfile                  # Container configuration
-└── fly.toml / render.yaml      # Deployment config
-```
-
----
-
-## 🔧 Configuration
-
-### Environment Variables
-Create a `.env` file in the root directory:
+Example placeholders:
 
 ```env
-# Django
-DEBUG=False
-SECRET_KEY=your-secret-key-here
-ALLOWED_HOSTS=localhost,example.com
-
-# Database
-DATABASE_URL=postgresql://user:password@localhost:5432/codecrux
-
-# Optional: AI Services
-GEMINI_API_KEY=your-google-genai-key
+DJANGO_SECRET_KEY=your-secret-key
+DJANGO_DEBUG=True
+DATABASE_URL=your-database-connection
+MISTRAL_API_KEY=your-mistral-api-key
+YOUTUBE_API_KEY=your-youtube-api-key
 ```
 
-### Database Setup
-```bash
-python manage.py makemigrations
-python manage.py migrate
-```
+These are illustrative variable names. Update them to match your implementation.
 
----
+**Never upload real API keys, passwords, tokens, or production credentials to GitHub.**
 
-## 🛠️ Key Technologies
+## 🔮 Future Scope
 
-| Component | Technology |
-|-----------|-----------|
-| **Backend** | Django 4.2 |
-| **Database** | PostgreSQL / SQLite |
-| **Frontend** | HTML5, CSS3, JavaScript |
-| **Video Analysis** | OpenCV, PIL |
-| **AI/ML** | DeepFace, TensorFlow |
-| **Server** | Gunicorn |
-| **Deployment** | Render, Docker |
+- Expand into Aeronautical Engineering.
+- Add Chemical and Polymer Engineering modules.
+- Introduce Nuclear Engineering learning experiences.
+- Develop Quantum Technology visualizations.
+- Improve AI-generated 3D models and simulations.
+- Introduce advanced personalized learning paths.
+- Expand multilingual content and virtual laboratories.
+- Develop AI-powered project mentoring and research support.
+- Integrate with more educational institutions.
 
----
+## 🌟 Impact
 
-## 📚 API Endpoints
+CODE CRUX aims to make engineering education more accessible, engaging, and practical by connecting theoretical learning with interactive visualization and experimentation.
 
-### Authentication
-- `POST /api/login` — Student/Faculty login
-- `POST /api/logout` — Logout user
-- `GET /api/user-profile` — Get current user info
-
-### Exam Management
-- `GET /api/exams/` — List exams
-- `POST /api/exams/create/` — Create new exam
-- `GET /api/exams/<id>/` — Get exam details
-- `POST /api/exams/<id>/submit/` — Submit exam attempt
-
-### Proctoring
-- `POST /api/proctoring/capture-frame/` — Submit webcam frame
-- `POST /api/proctoring/analyze-audio/` — Submit audio for analysis
-- `GET /api/proctoring/session/<id>/` — Get proctoring session data
-
-### Courses
-- `GET /api/courses/` — List courses
-- `POST /api/courses/create/` — Create course
-- `POST /api/courses/<id>/process-video/` — Process YouTube video
-
----
-
-## 🧪 Testing
-
-Run tests:
-```bash
-python manage.py test
-```
-
-Test specific module:
-```bash
-python manage.py test monitor.tests
-```
-
----
-
-## 📈 Monitoring & Analytics
-
-### Admin Dashboard
-- Real-time exam statistics
-- Student performance metrics
-- Proctoring event logs
-- System health monitoring
-
-### Reports Available
-- Candidate examination reports
-- Mood & behavior analysis
-- Evidence collection
-- Compliance audits
-
----
-
-## 🚢 Deployment
-
-### Render Deployment
-Connected to GitHub for automatic deployment:
-- **Repository:** https://github.com/Draupadeya/codecrux-lite
-- **Live URL:** https://codecrux-lite.onrender.com
-- **Auto-deploy:** On every push to `main` branch
-
-### Docker Deployment
-```bash
-docker build -t codecrux .
-docker run -p 8000:8000 codecrux
-```
-
-### Environment Setup
-1. Set environment variables in Render dashboard
-2. Configure database connection string
-3. Enable SSL/TLS for production
-4. Set up backup strategy
-
----
-
-## 🔐 Security Features
-
-✅ **CSRF Protection** — All forms protected  
-✅ **SQL Injection Prevention** — ORM parameterized queries  
-✅ **Password Hashing** — Django default security  
-✅ **Session Management** — Secure session handling  
-✅ **Face Verification** — Multi-factor verification  
-✅ **Event Logging** — All proctoring events recorded  
-
----
-
-## 📝 Database Models
-
-### Core Models
-- **StudentProfile** — Student user information
-- **Faculty** — Faculty/instructor data
-- **Candidate** — Exam candidate with face embeddings
-- **Session** — Proctoring session data
-- **Event** — Recorded proctoring events
-- **Exam** — Exam records
-- **ExamAttempt** — Student exam attempts
-- **Course** — Course information
-- **Question** — Quiz questions
-- **TestCase** — Test cases for programming problems
-
----
-
-## 🐛 Troubleshooting
-
-### Build Errors
-```bash
-# Clear cache and reinstall
-pip cache purge
-pip install -r requirements.txt
-```
-
-### Database Issues
-```bash
-# Reset database (development only)
-python manage.py migrate zero
-python manage.py migrate
-```
-
-### Static Files
-```bash
-python manage.py collectstatic --clear --noinput
-```
-
----
-
-## 📖 Documentation
-
-- **[ADMIN_SETUP_GUIDE.md](./proctoring/ADMIN_SETUP_GUIDE.md)** — Admin portal setup
-- **[ARCHITECTURE.md](./proctoring/ARCHITECTURE.md)** — System architecture
-- **[TESTING_GUIDE.md](./proctoring/TESTING_GUIDE.md)** — Testing procedures
-- **[MOOD_ANALYSIS_README.md](./proctoring/MOOD_ANALYSIS_README.md)** — Mood detection
-- **[FACE_DETECTION_API_GUIDE.md](./proctoring/FACE_DETECTION_API_GUIDE.md)** — Face recognition
-
----
+It provides a unified learning environment where students can **learn, practice, visualize, experiment, assess, and improve**.
 
 ## 🤝 Contributing
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit changes (`git commit -m 'Add amazing feature'`)
-4. Push to branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+Contributions, suggestions, bug reports, and feature ideas are welcome.
 
----
+1. Fork the repository.
+2. Create a new branch.
+3. Implement and test your changes.
+4. Commit your changes with a clear message.
+5. Submit a pull request describing your contribution.
+
+Please do not commit secrets, private student information, or examination recordings.
 
 ## 📄 License
 
-This project is licensed under the MIT License - see [LICENSE](LICENSE) file for details.
+A license has not yet been specified. Add a `LICENSE` file before distributing the project or authorizing reuse of its code.
 
 ---
 
-## 📧 Contact & Support
+### CODE CRUX
+**Learn Smarter. Visualize Better. Practice Virtually. Innovate with AI.**
 
-- **Author:** Draupadeya (KILAMBI SRINIVASA PHANINDRA)
-- **Email:** phanindrakilambi@gmail.com
-- **GitHub:** [@Draupadeya](https://github.com/Draupadeya)
-- **Repository:** [CodeCrux](https://github.com/Draupadeya/CodeCrux)
-
----
-
-## 🎓 Key Features Details
-
-### Pre-Exam Checks
-Students must complete before exam:
-1. ✅ **Microphone Test** — Verify audio input
-2. ✅ **Webcam Test** — Verify video input
-3. ✅ **Rules Acknowledgment** — Accept exam rules
-
-### During Exam
-- 📹 Continuous webcam recording
-- 🔊 Microphone monitoring
-- 😊 Mood analysis
-- 👁️ Face detection and verification
-- 📊 Real-time analytics
-
-### Post-Exam
-- 📋 Performance reports
-- 🎓 Certificate generation (if passed)
-- 📈 Analytics and insights
-- 💾 Evidence archival
-
----
-
-## ⚡ Performance
-
-- **Response Time:** < 500ms average
-- **Concurrent Users:** 100+
-- **Video Processing:** Real-time (30 FPS)
-- **Database Queries:** Optimized with indexing
-
----
-
-## 🚀 Future Improvements
-
-- [ ] Multi-language support
-- [ ] Enhanced AI models for emotion detection
-- [ ] Mobile app (React Native)
-- [ ] Live proctoring chat support
-- [ ] Advanced plagiarism detection
-- [ ] API rate limiting and SLA guarantees
-
----
-
-**Built with ❤️ for secure online education**

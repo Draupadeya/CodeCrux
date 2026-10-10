@@ -10,7 +10,7 @@ python manage.py setup_students --delete-all
 
 ### Load Sample Students
 ```bash
-python manage.py setup_students --file sample_students.csv
+python manage.py setup_students --file sample_students.csv 
 ```
 
 ### Add One Student

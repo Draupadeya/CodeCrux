@@ -8,7 +8,7 @@ class Migration(migrations.Migration):
     dependencies = [
         ('monitor', '0004_examschedule'),
     ]
-
+  
     operations = [
         migrations.AlterField(
             model_name='examschedule',

@@ -10,7 +10,7 @@ const courses = [
         duration: "12 weeks",
         students: 2340
     },
-    {
+    { 
         id: 2,
         title: "Python for Data Science",
         description: "Learn data analysis, visualization, and machine learning with Python",

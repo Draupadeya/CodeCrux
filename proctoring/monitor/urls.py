@@ -1,7 +1,7 @@
 from django.urls import path
 from . import views
 from . import api
-
+ 
 urlpatterns = [
     # API Endpoints
     path('api/login/', api.LoginAPI.as_view(), name='api_login'),

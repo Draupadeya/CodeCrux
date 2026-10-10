@@ -10,7 +10,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AddField(
+        migrations.AddField( 
             model_name='course',
             name='video_url',
             field=models.URLField(blank=True, null=True),

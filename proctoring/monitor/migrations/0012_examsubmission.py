@@ -8,7 +8,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('monitor', '0011_exam_examattempt_question_testcase_examassignment_and_more'),
-    ]
+    ] 
 
     operations = [
         migrations.CreateModel(

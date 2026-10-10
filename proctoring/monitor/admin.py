@@ -7,7 +7,7 @@ from django.contrib.auth.admin import UserAdmin
 from django import forms
 
 # -----------------------------
-# Candidate Admin
+# Candidate Admin 
 # -----------------------------
 @admin.register(Candidate)
 class CandidateAdmin(admin.ModelAdmin):

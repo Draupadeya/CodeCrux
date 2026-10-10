@@ -10,7 +10,7 @@ I've added a **complete face detection endpoint** to your Flask app at:
 
 ## 🎯 Features
 
-### Face Detection Endpoint (`/detect-faces`)
+### Face Detection Endpoint (`/detect-faces`) 
 - **Purpose**: Detects and counts faces in uploaded images
 - **Use Case**: Exam proctoring to ensure only 1 person is present
 - **Technology**: DeepFace with OpenCV backend

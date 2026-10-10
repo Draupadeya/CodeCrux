@@ -4,7 +4,7 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
+ 
     dependencies = [
         ('monitor', '0009_course_video_url'),
     ]

@@ -4,7 +4,7 @@
 
 ### Prerequisites
 - Django server running: `python manage.py runserver 786`
-- Admin portal accessible: `http://localhost:786/admin/`
+- Admin portal accessible: `http://localhost:786/admin/` 
 - Sample data loaded (optional but recommended)
 
 ---
